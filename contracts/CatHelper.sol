@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-import "CatFactory.sol";
+import "./CatFactory.sol";
 
 contract CatHelper is CatFactory {
 
@@ -29,7 +29,7 @@ contract CatHelper is CatFactory {
     //升级猫
     function levelUpCat(uint catId) external payable onlyOwnerOf(catId) {
             require(msg.value>feeToLevelUp,"fee is not sufficient");
-          Cat cat=  cats[catId];
+          Cat storage cat=  cats[catId];
             cat.level++;
             cat.defense++;
             cat.power++;
@@ -41,11 +41,11 @@ contract CatHelper is CatFactory {
     }
 
     //获得所有猫的ID
-    function getCatsByOwner(address owner)  returns(uint[] data){
-        uint[] memory result = new uint[](ownerCatCount[_owner]);
+    function getCatsByOwner(address owner) public view returns(uint[] memory data){
+        uint[] memory result = new uint[](ownerCatCount[owner]);
         uint counter = 0;
         for (uint i = 0; i < cats.length; i++) {
-            if (zombieToOwner[i] == _owner) {
+            if (catToOwner[i] == owner) {
                 result[counter] = i;
                 counter++;
             }
@@ -63,10 +63,10 @@ contract CatHelper is CatFactory {
 
     //融合，产生新猫
     function hybrid(uint catId, uint _targetDna) internal onlyOwnerOf(catId) {
-        Cat storage myCat = cat[catId];
+        Cat storage myCat = cats[catId];
         require(_isReady(myCat),'Cat is not ready');
         _targetDna = _targetDna % dnaModulus;
-        uint newDna = (myZombie.dna + _targetDna) / 2;
+        uint newDna = (myCat.dna + _targetDna) / 2;
         newDna = newDna - newDna % 10 + 9;
         _createCat("NoName", newDna);
         _triggerCooldown(myCat);

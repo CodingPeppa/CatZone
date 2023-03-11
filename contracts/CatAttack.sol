@@ -3,15 +3,15 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-import "CatHelper.sol";
+import "./CatHelper.sol";
 
 contract CatAttack is CatHelper{
 
     function attack(uint catId,uint targetId) onlyOwnerOf(catId) external returns(uint){
-        require(msg.sender != catToOwner[_targetId],'The target cat is yours!');
+        require(msg.sender != catToOwner[targetId],'The target cat is yours!');
         Cat storage myCat = cats[catId];
-        require(_isReady(myZombie),'Your zombie is not ready!');
-        Cat storage enemyCat = cats[_targetId];
+        require(_isReady(myCat),'Your zombie is not ready!');
+        Cat storage enemyCat = cats[targetId];
         if(whoWin(myCat,enemyCat)){
             myCat.winCount++;
             myCat.level++;

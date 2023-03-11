@@ -8,11 +8,14 @@ import "./CatHelper.sol";
 
 contract CatOwnerShip is CatHelper, ERC721 {
 
+   
+    constructor() ERC721("Cats","ct") {}
+      
     /**
    * @dev Returns the number of tokens in ``owner``'s account.
      */
-    function balanceOf(address owner) override external view returns (uint256 balance){
-        return ownerCatCount(owner);
+    function balanceOf(address owner) override public view returns (uint256 balance){
+        return  ownerCatCount(owner);
     }
 
     /**
@@ -22,7 +25,7 @@ contract CatOwnerShip is CatHelper, ERC721 {
      *
      * - `tokenId` must exist.
      */
-    function ownerOf(uint256 tokenId) override external view returns (address owner){
+    function ownerOf(uint256 tokenId) override public view returns (address owner){
         return catToOwner(tokenId);
     }
 
@@ -41,7 +44,7 @@ contract CatOwnerShip is CatHelper, ERC721 {
         require(ownerOf(tokenId) == from, "ERC721: transfer from incorrect owner");
 
         // Clear approvals from the previous owner
-        delete _tokenApprovals[tokenId];
+        delete super._tokenApprovals[tokenId];
 
     unchecked {
         // `_balances[from]` cannot overflow for the same reason as described in `_burn`:

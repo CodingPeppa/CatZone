@@ -28,7 +28,7 @@ contract CatFactory is Ownable{
   Cat[] public cats;
 
     mapping(uint=>address) public catToOwner;
-    mapping (address => uint) ownerCatCount;
+    mapping (address => uint) public ownerCatCount;
     mapping (uint => uint) public catFeedTimes;//(id=>time)
 
     function _createCat(string memory name,uint dna) internal{
