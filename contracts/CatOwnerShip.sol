@@ -8,14 +8,14 @@ import "./CatHelper.sol";
 
 contract CatOwnerShip is CatHelper, ERC721 {
 
-   
-    constructor() ERC721("Cats","ct") {}
-      
+
+    constructor() ERC721("Cats", "ct") {}
+
     /**
    * @dev Returns the number of tokens in ``owner``'s account.
      */
     function balanceOf(address owner) override public view returns (uint256 balance){
-        return  ownerCatCount(owner);
+        return ownerCatCount(owner);
     }
 
     /**
@@ -56,9 +56,7 @@ contract CatOwnerShip is CatHelper, ERC721 {
         ownerCatCount[to] += 1;
     }
         catToOwner[tokenId] = to;
-
         emit Transfer(from, to, tokenId);
-
         _afterTokenTransfer(from, to, tokenId, 1);
     }
 

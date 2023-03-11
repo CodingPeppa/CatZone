@@ -5,30 +5,31 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./CatHelper.sol";
 
-contract CatAttack is CatHelper{
+contract CatAttack is CatHelper {
 
-    function attack(uint catId,uint targetId) onlyOwnerOf(catId) external returns(uint){
-        require(msg.sender != catToOwner[targetId],'The target cat is yours!');
+    function attack(uint catId, uint targetId) onlyOwnerOf(catId) external returns (uint){
+        require(msg.sender != catToOwner[targetId], 'The target cat is yours!');
         Cat storage myCat = cats[catId];
-        require(_isReady(myCat),'Your zombie is not ready!');
+        require(_isReady(myCat), 'Your zombie is not ready!');
         Cat storage enemyCat = cats[targetId];
-        if(whoWin(myCat,enemyCat)){
+        if (whoWin(myCat, enemyCat)) {
             myCat.winCount++;
             myCat.level++;
             enemyCat.lossCount++;
-            hybrid(catId,targetDna);
+            uint targetDna = enemyCat.dna;
+            hybrid(catId, targetDna);
             return catId;
-        }else{
+        } else {
             myCat.lossCount++;
             enemyCat.winCount++;
             return targetId;
         }
     }
 
-    function whoWin(Cat myCat,Cat enemyCat) internal returns(bool){
-        if(myCat.power-enemyCat.defense>0){
+    function whoWin(Cat storage myCat, Cat storage enemyCat) view internal returns (bool){
+        if (myCat.power - enemyCat.defense > 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

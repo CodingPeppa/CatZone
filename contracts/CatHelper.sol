@@ -9,7 +9,7 @@ contract CatHelper is CatFactory {
 
     uint  feeToLevelUp = 0.0001 ether;
 
-    uint changeNameFee =0.000000001 ether;
+    uint changeNameFee = 0.000000001 ether;
 
     //必须是这只猫的主人
     modifier onlyOwnerOf(uint catId){
@@ -18,7 +18,7 @@ contract CatHelper is CatFactory {
     }
     //要大于这个等级
     modifier aboveLevel(uint level, uint catId) {
-        require(cats[catId].level >= level,'Level is not sufficient');
+        require(cats[catId].level >= level, 'Level is not sufficient');
         _;
     }
 
@@ -28,20 +28,20 @@ contract CatHelper is CatFactory {
 
     //升级猫
     function levelUpCat(uint catId) external payable onlyOwnerOf(catId) {
-            require(msg.value>feeToLevelUp,"fee is not sufficient");
-          Cat storage cat=  cats[catId];
-            cat.level++;
-            cat.defense++;
-            cat.power++;
+        require(msg.value > feeToLevelUp, "fee is not sufficient");
+        Cat storage cat = cats[catId];
+        cat.level++;
+        cat.defense++;
+        cat.power++;
     }
     //改名字
-    function changeName(uint catId,string calldata name) external payable onlyOwnerOf(catId) aboveLevel(2,catId){
-        require(msg.value>changeNameFee,"fee is not sufficient");
-        cats[catId].name=name;
+    function changeName(uint catId, string calldata name) external payable onlyOwnerOf(catId) aboveLevel(2, catId) {
+        require(msg.value > changeNameFee, "fee is not sufficient");
+        cats[catId].name = name;
     }
 
     //获得所有猫的ID
-    function getCatsByOwner(address owner) public view returns(uint[] memory data){
+    function getCatsByOwner(address owner) public view returns (uint[] memory data){
         uint[] memory result = new uint[](ownerCatCount[owner]);
         uint counter = 0;
         for (uint i = 0; i < cats.length; i++) {
@@ -64,7 +64,7 @@ contract CatHelper is CatFactory {
     //融合，产生新猫
     function hybrid(uint catId, uint _targetDna) internal onlyOwnerOf(catId) {
         Cat storage myCat = cats[catId];
-        require(_isReady(myCat),'Cat is not ready');
+        require(_isReady(myCat), 'Cat is not ready');
         _targetDna = _targetDna % dnaModulus;
         uint newDna = (myCat.dna + _targetDna) / 2;
         newDna = newDna - newDna % 10 + 9;
