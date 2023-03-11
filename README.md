@@ -11,3 +11,10 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat run scripts/deploy.js
 ```
+
+## need to install  openzeppelin first;
+
+```shell
+ npm install @openzeppelin/contracts
+```
+
