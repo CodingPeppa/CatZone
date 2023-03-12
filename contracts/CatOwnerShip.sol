@@ -11,11 +11,18 @@ contract CatOwnerShip is CatHelper, ERC721 {
 
     constructor() ERC721("Cats", "ct") {}
 
+         // Mapping from token ID to approved address
+    mapping(uint256 => address) private _tokenApprovals;
+
+    // Mapping from owner to operator approvals
+    mapping(address => mapping(address => bool)) private _operatorApprovals;
+
     /**
    * @dev Returns the number of tokens in ``owner``'s account.
      */
     function balanceOf(address owner) override public view returns (uint256 balance){
-        return ownerCatCount(owner);
+        require(owner != address(0), "ERC721: address zero is not a valid owner");
+        return  ownerCatCount[owner];
     }
 
     /**
@@ -26,7 +33,11 @@ contract CatOwnerShip is CatHelper, ERC721 {
      * - `tokenId` must exist.
      */
     function ownerOf(uint256 tokenId) override public view returns (address owner){
-        return catToOwner(tokenId);
+       super.ownerOf(tokenId);
+    }
+
+      function _ownerOf(uint256 tokenId) internal view override returns (address) {
+        return catToOwner[tokenId];
     }
 
 
@@ -44,7 +55,7 @@ contract CatOwnerShip is CatHelper, ERC721 {
         require(ownerOf(tokenId) == from, "ERC721: transfer from incorrect owner");
 
         // Clear approvals from the previous owner
-        delete super._tokenApprovals[tokenId];
+        delete _tokenApprovals[tokenId];
 
     unchecked {
         // `_balances[from]` cannot overflow for the same reason as described in `_burn`:
