@@ -41,7 +41,7 @@ contract CatMarket is CatOwnerShip {
     function sellCats(uint catId, uint price) external onlyOwnerOf(catId) {
         require(price >= minPrice + tax, 'Your price must > minPrice+tax');
         catShop[catId] = CatSales(payable(msg.sender), price);
-        shopCatCount = SafeMath.add(1);
+        shopCatCount = SafeMath.add(shopCatCount,1);
         emit SellCat(catId, msg.sender);
     }
 
@@ -50,7 +50,7 @@ contract CatMarket is CatOwnerShip {
         //转移
         safeTransferFrom(catShop[catId].seller, msg.sender, catId);
         delete catShop[catId];
-        shopCatCount = SafeMath.sub(1);
+        shopCatCount = SafeMath.sub(shopCatCount,1);
         emit BuyShopCat(catId, msg.sender, catShop[catId].seller);
     }
 
